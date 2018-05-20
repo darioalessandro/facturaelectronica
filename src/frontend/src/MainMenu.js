@@ -212,7 +212,7 @@ class MainMenu extends React.Component {
             <GoogleLogin
               className={classes.googleButton}
               clientId={this.props.gauthId}
-              buttonText="Login to EEP"
+              buttonText="Entrar con Google"
               onSuccess={this.loginSuccess.bind(this)}
               onFailure={this.loginFailure.bind(this)}
             />

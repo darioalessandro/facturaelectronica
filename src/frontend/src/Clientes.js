@@ -136,16 +136,12 @@ class Clientes extends React.Component {
   }
 
   fetchProducts(filter) {
-    return fetch(
-      `${this.props.backendURL}/products?category_filter=${encodeURIComponent(
-        filter
-      )}`
-    ).then(result => result.json());
+    return fetch(`${this.props.backendURL}/customers`).then(result => result.json());
   }
 
   postOrder(order) {
     console.log("posting order", order);
-    return fetch(`${this.props.backendURL}/create_order`, {
+    return fetch(`${this.props.backendURL}/customers`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -293,18 +289,16 @@ class Clientes extends React.Component {
                   <TableRow style={styles.tableRowStyle}>
                     <TableCell>Nombre</TableCell>
                     <TableCell>RFC</TableCell>
-                    <TableCell>Empresa</TableCell>
+                    <TableCell>Fecha</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {this.state.products.map(n => {
                     return (
-                      <TableRow hover key={n.product_code}>
-                        <TableCell>{n.product_code}</TableCell>
-                        <TableCell>{n.description}</TableCell>
-                        <TableCell numeric>{n.price}</TableCell>
-                        <TableCell numeric>{n.quantity}</TableCell>
-                        <TableCell numeric>{n.order_quantity}</TableCell>
+                      <TableRow hover key={n.id}>
+                        <TableCell>{`${n.first_name}${n.last_name}`}</TableCell>
+                        <TableCell>{n.rfc}</TableCell>
+                        <TableCell>{n.created_at}</TableCell>
                         <TableCell padding="checkbox">
                           <IconButton
                             color="primary"

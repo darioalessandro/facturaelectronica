@@ -97,7 +97,7 @@ class Facturas extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      products: [],
+      receipts: [],
       checked: [0],
       productCompany: "",
       productCategory: "",
@@ -109,12 +109,12 @@ class Facturas extends React.Component {
   }
 
   async componentDidMount() {
-    const products = await this.fetchProducts();
-    this.setState({ products: products });
+    const receipts = await this.fetchProducts();
+    this.setState({ receipts });
   }
 
-  fetchProducts() {
-    return fetch(`${this.props.backendURL}/products`).then(result =>
+    fetchProducts() {
+    return fetch(`${this.props.backendURL}/receipts`).then(result =>
       result.json()
     );
   }
@@ -131,8 +131,9 @@ class Facturas extends React.Component {
     });
 
     //refresh ui with updated product list
-    const products = await this.fetchProducts();
-    this.setState({ products: products });
+    const receipts = await this.fetchProducts();
+      console.log("posting receipts", JSON.stringify(receipts));
+    this.setState({ receipts });
   }
 
   postProduct(product) {
@@ -268,7 +269,7 @@ class Facturas extends React.Component {
                 fullWidth
                 onClick={this.upsertProduct.bind(this)}
               >
-                Add/Update Product
+                Crear factura
               </Button>
             </Paper>
           </Grid>
@@ -281,7 +282,7 @@ class Facturas extends React.Component {
                 <TableHead>
                   <TableRow>
                     <TableCell padding="checkbox" />
-                    <TableCell>ID</TableCell>
+                    <TableCell>Folio</TableCell>
                     <TableCell>Tipo</TableCell>
                     <TableCell>Emisor</TableCell>
                     <TableCell>Receptor</TableCell>
@@ -289,33 +290,31 @@ class Facturas extends React.Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {this.state.products.length === 0 ? (
+                  {this.state.receipts.length === 0 ? (
                     <TableRow hover>
                       <TableCell colSpan={6}>
-                        No products found! this is most likely a db error
+                        No se encontraron facturas
                       </TableCell>
                     </TableRow>
                   ) : (
-                    this.state.products.map(p => {
-                      const key = `${p.company_id}-${p.category}-${
-                        p.product_code
-                      }`;
+                    this.state.receipts.map(p => {
+                      const key = `${p.id}`;
                       return (
                         <TableRow hover key={key}>
                           <TableCell padding="checkbox">
                             <Checkbox
-                              onChange={this.handleToggle(p.product_code)}
+                              onChange={this.handleToggle(p.id)}
                               checked={
-                                this.state.checked.indexOf(p.product_code) !==
+                                this.state.checked.indexOf(p.id) !==
                                 -1
                               }
                             />
                           </TableCell>
-                          <TableCell>{p.company_id}</TableCell>
-                          <TableCell numeric>{p.category}</TableCell>
-                          <TableCell numeric>{p.product_code}</TableCell>
-                          <TableCell numeric>{p.description}</TableCell>
-                          <TableCell numeric>{p.price}</TableCell>
+                          <TableCell>{p.id}</TableCell>
+                          <TableCell>{'--'}</TableCell>
+                          <TableCell>{`${p.emitter_details.first_name}${p.emitter_details.last_name}`}</TableCell>
+                          <TableCell>{`${p.receiver_details.first_name}${p.receiver_details.last_name}`}</TableCell>
+                          <TableCell numeric>{p.total}</TableCell>
                         </TableRow>
                       );
                     })
